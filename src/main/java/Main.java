@@ -1,20 +1,16 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
+    private static Calculator calculator = new Calculator();
     public static void main(String[] args) {
         System.out.println("Калькулятор счета приветствует вас. ");
 
         int countPerson = getCountPerson();
-        ArrayList<Product> products = getProducts();
+        getProducts();
+        calculator.printProductList();
+        calculator.splitCheck(countPerson);
 
-        System.out.println("Добавленные товары:");
-        for(Product product : products){
-            System.out.println("'" + product.name+"' стоимостью " +
-                    String.format("%.2f ", product.price) +
-                    (new Formatter( product.price ) ).getName() );
-        }
     }
 
     public static int getCountPerson(){
@@ -36,9 +32,7 @@ public class Main {
         return countPerson;
     }
 
-    public static ArrayList<Product> getProducts(){
-        ArrayList<Product> products = new ArrayList<>();
-
+    public static void getProducts(){
         while(true) {
             System.out.println("Введите название товара или команду 'Завершить':");
             String strName = scanner.nextLine();
@@ -50,13 +44,7 @@ public class Main {
                 String strPrice = scanner.nextLine();
                 double price = strPrice.matches("\\d{1,}+(\\.\\d{2}+)") ? Double.parseDouble(strPrice) : -1;
                 if( price >= 0 ){
-                    Product product = new Product(strName, price);
-                    products.add(product);
-                    System.out.println("Товар '" + strName+"'"+
-                            " стоимостью "+
-                            String.format("%.2f ", price) +
-                            (new Formatter( price ) ).getName()+
-                            " добавлен в список.\n");
+                    calculator.add(strName, price);
                 }
                 else{
                     System.out.println("Вы ввели некорректную стоимость товара: " +
@@ -65,8 +53,6 @@ public class Main {
                 }
             }
         }
-
-        return products;
     }
 
 }
